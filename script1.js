@@ -64,4 +64,4 @@ function keyPressed(){
     if(keyCode==ENTER)  saveCanvas(kname+'_thin','png');
 }
 
-
+//更新チェック
