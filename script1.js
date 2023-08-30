@@ -1,8 +1,8 @@
 let img;
 
-let pix_hoso, pix_niti, ikisaki, plist, longlist;
+let pix_hoso, pix_niti, ikisaki, plist, crossinfo;
 
-let kname = '12a_355';//'11n_39'
+let kname = '6_2';
 
 function preload(){
     img = loadImage('diagrams_2977/' + kname + '.png');
@@ -26,42 +26,55 @@ function setup(){
 
     plist = pix2plist(pix_hoso);
     plist = sortplist(plist, ikisaki);
+
+    crossinfo = splitarc(plist);
+
+    console.log(cross2dowker(crossinfo, 0, false));
+    
     
     rectMode(CENTER);
 
-    noLoop();
-    
 }
 
 
 function draw(){
 
-    
     //描画
-    //background(255);
+    background(255);
 
-    // noStroke();
-    // for(let i=1; i<pix_hoso.length-1; i++)    for(let j=1; j<pix_hoso[0].length-1; j++){
-    //     if(pix_hoso[i][j]==0)    fill(255);
-    //     if(pix_hoso[i][j]==1)    fill(0);
-    //     rect(i, j, 1);
-    // }
+    strokeWeight(3);
+    stroke(0, 0, 255);
+    for(let i=0; i<plist.length; i++){
+        for(let j=0; j<plist[i].length-1; j++){
+            line(plist[i][j][0], plist[i][j][1], plist[i][j+1][0], plist[i][j+1][1]);
+        }
+    }
 
-    // stroke(0, 0, 255);
-    // strokeWeight(3);
-    // for(let i=0; i<12; i++){
-    //     for(let j=0; j<plist[i].length-1; j++){
-    //         line(plist[i][j][0], plist[i][j][1], plist[i][j+1][0], plist[i][j+1][1]);
-    //     }
-    // }
+    for(let i=0; i<crossinfo.length; i++){
+        if(crossinfo[i][2]) line(crossinfo[i][3].x, crossinfo[i][3].y, crossinfo[i][4].x, crossinfo[i][4].y);
+        else    line(crossinfo[i][5].x, crossinfo[i][5].y, crossinfo[i][6].x, crossinfo[i][6].y);
+    }
 
-    detectCross(plist);
+    noStroke();
+    fill(255, 0, 0);
+    circle(plist[0][0][0], plist[0][0][1], 6);
 
 }
 
 
-function keyPressed(){
-    if(keyCode==ENTER)  saveCanvas(kname+'_thin','png');
+function mouseClicked(){
+    for(let i=0; i<crossinfo.length; i++){
+        if(dist(mouseX, mouseY, crossinfo[i][7].x, crossinfo[i][7].y)<10){
+            crossinfo[i][2] = !crossinfo[i][2];
+
+            let code = cross2dowker(crossinfo, 0, false);
+            console.log(code);
+            console.log(dok2alex(code));
+        }
+    }
 }
 
-//更新チェック
+
+// function keyPressed(){
+//     if(keyCode==ENTER)  saveCanvas(kname+'_thin','png');
+// }

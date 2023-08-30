@@ -903,9 +903,9 @@ function dok2rise(dok){
 
 
 //ライズ付きドーカー対からアレキサンダー多項式の係数リスト
-function dok2alex(doks){
+function dok2alex(dok){
 
-    let dok = new Array(doks.length);
+    let doks = dok2rise(dok);
     let sign0 = new Array(doks.length+1);
     let sign = new Array(doks.length*2);
     let result;
@@ -1338,38 +1338,57 @@ function sortplist(argpl, argik){
 
     }
 
-    console.log(result);
     return result;
 }
 
 
-function detectCross(pl){
+//点群リストを交点で分離する　交点情報を返す
+function splitarc(pl){
     
     let n = pl.length;
-
-    let result = [];
 
     let va, vb, vc, vd;
 
     let crossinfo = [];
+    for(let i=0; i<n; i++){
+        crossinfo[i] = [i];
+    }
+
+    let lista = [];
+    for(let i=0; i<n; i++)  lista[i] = [i,0,true];
     
     for(let k=0; k<n; k++){
 
-        va = new p5.Vector(pl[k][pl[k].length-1][0], pl[k][pl[k].length-1][1]);
-        vb = new p5.Vector(pl[(k+1)%n][0][0], pl[(k+1)%n][0][1]);
+        let k1 = lista[k][0];
+
+        va = new p5.Vector(pl[k1][pl[k1].length-1][0], pl[k1][pl[k1].length-1][1]);
+        vb = new p5.Vector(pl[(k1+1)%pl.length][0][0], pl[(k1+1)%pl.length][0][1]);
+
+        lista[k][5] = {x:va.x, y:va.y};
+        lista[k][6] = {x:vb.x, y:vb.y};
 
         for(let i=0; i<pl.length; i++){
-            let flag = false;;
+            let flag = false;
+
             for(let j=0; j<pl[i].length-1; j++){
                 vc = new p5.Vector(pl[i][j][0],pl[i][j][1]);
                 vd = new p5.Vector(pl[i][j+1][0], pl[i][j+1][1]);
+
                 let tmp = crosspoint(va,vb,vc,vd);
                 if(tmp){
-                    fill(255, 0, 0);
-                    noStroke();
-                    circle(tmp.x, tmp.y, 3);
+                    lista[k][7] = {x:tmp.x, y:tmp.y};
+
                     flag = true;
-                    result[i] = [pl[i].slice(0,j-1), pl[i].slice(j+2)];
+                    pl.splice(i+1, 0, pl[i].slice(j+2));
+                    pl[i] = pl[i].slice(0,j-1);
+
+                    lista[k][3] = {x:pl[i][pl[i].length-1][0], y:pl[i][pl[i].length-1][1]};
+                    lista[k][4] = {x:pl[i+1][0][0], y:pl[i+1][0][1]};
+
+                    for(let j1=0; j1<n; j1++)   if(lista[j1][0]>=i)    lista[j1][0]++;
+                    lista[k][1] = i;
+                    for(let j1=0; j1<k; j1++)   if(lista[j1][1]>=i)    lista[j1][1]++;
+
                     break;
                 }
             }
@@ -1378,17 +1397,40 @@ function detectCross(pl){
 
     }
 
-    result = result.flat();
-
-    stroke(0, 0, 255);
-    strokeWeight(3);
-    for(let i=0; i<result.length; i++){
-        for(let j=0; j<result[i].length-1; j++){
-            line(result[i][j][0], result[i][j][1], result[i][j+1][0], result[i][j+1][1]);
-        }
-    }
+    return lista;
 }
 
+
+//交点情報からドーカーコード　引数：交点情報、始点となるアーク番号、逆回り
+function cross2dowker(arg, sp, rev){
+
+    let n2 = arg.length*2;
+    let lista = new Array(arg.length);
+
+    //順方向
+    
+    for(let i=0; i<lista.length; i++){
+        let sign = -1;
+        if(!rev)    lista[i] = [(arg[i][0]-sp+1+n2)%n2+1, (arg[i][1]-sp+1+n2)%n2+1];
+        else    lista[i] = [(n2-arg[i][0]+sp)%n2+1, (n2-arg[i][1]+sp)%n2+1];
+        if(lista[i][0]%2==0){
+            let tmp = lista[i][0];
+            lista[i][0] = lista[i][1];
+            lista[i][1] = tmp;
+            sign*=-1;
+        }
+        if(arg[i][2])   sign*=-1;
+        lista[i][1]*=sign;
+    }
+
+    lista.sort(function(a,b){return a[0]-b[0]});
+
+    let result = new Array(lista.length);
+    
+    for(let i=0; i<result.length; i++)  result[i] = lista[i][1];
+
+    return result;
+}
 
 /*
 メモ
