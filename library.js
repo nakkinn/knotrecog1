@@ -990,67 +990,6 @@ function dok2alex(dok){
 }
 
 
-//ドーカー全通り
-function slideDowker(arg){
-
-    let dowkerpair = new Array(arg.length);
-    let slidepair = new Array(arg.length);
-
-    for(let i=0; i<arg.length; i++){
-        dowkerpair[i] = [i*2+1, arg[i]];
-        slidepair[i] = new Array(3);
-    }
-
-    for(let k=0; k<crosslist.length; k++){
-        for(let i=0; i<arg.length; i++){
-            for(let j=0; j<2; j++){
-                slidepair[i][j] = ( (abs(dowkerpair[i][j])+arg.length*2-crosslist[k][2]-1)%(arg.length*2) + 1);
-            }
-            slidepair[i][2] = arg[i] / abs(arg[i]);
-        }
-        
-        let tmp;
-        for(let i=0; i<slidepair.length; i++){
-            if(slidepair[i][0]%2==0){
-                tmp = slidepair[i][0];
-                slidepair[i][0] = slidepair[i][1];
-                slidepair[i][1] = tmp;
-            }
-        }
-        slidepair.sort(function(a,b){return a[0]-b[0]});
-        
-        tmp = new Array(slidepair.length);
-        for(let i=0; i<slidepair.length; i++)   tmp[i] = slidepair[i][1] * slidepair[i][2];
-        if(tmp[0]<0)    for(let i=0; i<slidepair.length; i++)  tmp[i] *= -1;
-        codes1.push(tmp);
-
-
-        for(let i=0; i<arg.length; i++){
-            for(let j=0; j<2; j++){
-                slidepair[i][j] = arg.length*2 - abs(slidepair[i][j]) + 2;
-                if(slidepair[i][j] > arg.length*2) slidepair[i][j] = 1;
-            }
-        }
-
-        for(let i=0; i<slidepair.length; i++){
-            if(slidepair[i][0]%2==0){
-                tmp = slidepair[i][0];
-                slidepair[i][0] = slidepair[i][1];
-                slidepair[i][1] = tmp;
-            }
-        }
-        slidepair.sort(function(a,b){return a[0]-b[0]});
-
-        tmp = new Array(slidepair.length);
-        for(let i=0; i<slidepair.length; i++)   tmp[i] = slidepair[i][1] * slidepair[i][2];
-        if(tmp[0]<0)    for(let i=0; i<slidepair.length; i++)  tmp[i] *= -1;
-        codes2.push(tmp);
-
-    }
-
-}
-
-
 //端点の組の決定
 function pairing(arg){
     //端点の座標
@@ -1376,6 +1315,8 @@ function splitarc(pl){
 
                 let tmp = crosspoint(va,vb,vc,vd);
                 if(tmp){
+                    console.log(j);
+
                     lista[k][7] = {x:tmp.x, y:tmp.y};
 
                     flag = true;
