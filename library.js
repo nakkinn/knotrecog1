@@ -1202,7 +1202,7 @@ function pix2plist(arg){
                             }
                         }
 
-                        if(flag3 || k%4==0) tmp.push([py,px]); 
+                        if(flag3 || k%5==0) tmp.push([py,px]); 
                         if(flag3)   break;
                     }
 
@@ -1288,11 +1288,6 @@ function splitarc(pl){
 
     let va, vb, vc, vd;
 
-    let crossinfo = [];
-    for(let i=0; i<n; i++){
-        crossinfo[i] = [i];
-    }
-
     let lista = [];
     for(let i=0; i<n; i++)  lista[i] = [i,0,true];
     
@@ -1315,7 +1310,6 @@ function splitarc(pl){
 
                 let tmp = crosspoint(va,vb,vc,vd);
                 if(tmp){
-                    console.log(j);
 
                     lista[k][7] = {x:tmp.x, y:tmp.y};
 
@@ -1339,6 +1333,139 @@ function splitarc(pl){
     }
 
     return lista;
+}
+
+
+function split2(arg){
+
+    const n = arg.length;
+
+    const slit = 8;
+
+    let lista = [];
+    for(let i=0; i<n; i++)  lista[i] = [i, 0, true];
+
+    let va, vb, vc, vd, vcr;
+
+    let listfst, listsec;
+
+    for(let k0=0; k0<n; k0++){
+
+        let k1 = lista[k0][0];
+
+        va = new p5.Vector(arg[k1][arg[k1].length-1][0], arg[k1][arg[k1].length-1][1]);
+        vb = new p5.Vector(arg[(k1+1)%arg.length][0][0], arg[(k1+1)%arg.length][0][1]);
+        
+        lista[k0][5] = {x:va.x, y:va.y};
+        lista[k0][6] = {x:vb.x, y:vb.y};
+
+        for(let i=0; i<arg.length; i++){
+
+            let bflag = false;
+
+            for(let j=0; j<arg[i].length-1; j++){
+
+                vc = new p5.Vector(arg[i][j][0], arg[i][j][1]);
+                vd = new p5.Vector(arg[i][j+1][0], arg[i][j+1][1]);
+
+                vcr = crosspoint(va, vb, vc, vd);
+
+                if(vcr){    //交点発見
+
+                    let dsum; 
+                    let dis;
+                    let x1, y1;
+
+                    dsum = dist(vcr.x, vcr.y, vd.x, vd.y);
+                    let flag = true;    //スリット幅を超えずに端点に行き着いた
+
+                    //後ろにすきま分だけたどる
+                    for(let k=j+1; k<arg[i].length-1; k++){
+                        dis = dist(arg[i][k][0], arg[i][k][1], arg[i][k+1][0], arg[i][k+1][1]);
+                        dsum += dis;
+                        if(dsum>slit){
+                            let ratio = (dsum-slit)/dis;
+                            
+                            x1 = arg[i][k][0]*ratio + arg[i][k+1][0]*(1-ratio);
+                            y1 = arg[i][k][1]*ratio + arg[i][k+1][1]*(1-ratio);
+                            
+                            flag = false;
+
+                            listsec = arg[i].slice(k+1);
+                            listsec.unshift([x1,y1]);
+
+                            break;
+                        }
+                    }
+
+                    if(flag){
+                        listsec = [
+                            [arg[i][arg[i].length-1][0]*0.9+arg[i][arg[i].length-2][0]*0.1,
+                            arg[i][arg[i].length-1][1]*0.9+arg[i][arg[i].length-2][1]*0.1 ],
+                            [arg[i][arg[i].length-1][0], arg[i][arg[i].length-1][1] ]
+                        ];
+                    }
+
+                    dsum = dist(vcr.x, vcr.y, vc.x, vc.y);
+                    flag = true;
+
+                    //前にたどる
+                    for(let k=j; k>0; k--){
+                        dis = dist(arg[i][k][0], arg[i][k][1], arg[i][k-1][0], arg[i][k-1][1]);
+                        dsum+=dis;
+
+                        if(dsum>slit){
+                            let ratio = (dsum-slit)/dis;
+
+                            x1 = arg[i][k][0]*ratio + arg[i][k-1][0]*(1-ratio);
+                            y1 = arg[i][k][1]*ratio + arg[i][k-1][1]*(1-ratio);
+                            
+                            flag = false;
+
+                            listfst = arg[i].slice(0, k);
+
+                            listfst.push([x1,y1]);
+
+                            break;
+                        }
+
+                        if(flag){
+                            listfst = [
+                                [arg[i][0][0], arg[i][0][1] ],
+                                [arg[i][0][0]*0.9 + arg[i][1][0]*0.1, arg[i][0][1]*0.9 + arg[i][1][1]*0.1]
+                            ];
+                        }
+
+                    }
+
+                    arg.splice(i,1);
+                    arg.splice(i,0,listsec);
+                    arg.splice(i,0,listfst);
+                    
+                    lista[k0][7] = {x:vcr.x, y:vcr.y};
+
+                    lista[k0][3] = {x:arg[i][arg[i].length-1][0], y:arg[i][arg[i].length-1][1]};
+                    lista[k0][4] = {x:arg[i+1][0][0], y:arg[i+1][0][1]};
+
+                    for(let j1=0; j1<n; j1++)   if(lista[j1][0]>=i)    lista[j1][0]++;
+                    lista[k0][1] = i;
+                    for(let j1=0; j1<k0; j1++)   if(lista[j1][1]>=i)    lista[j1][1]++;
+
+                    bflag = true;
+                    break;
+                }
+            }
+
+            if(bflag)   break;
+
+        }
+
+    }
+   
+
+    return lista;
+
+    
 }
 
 

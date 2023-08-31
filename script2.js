@@ -4,15 +4,42 @@ let img;
 
 let pix_hoso, pix_niti, ikisaki, plist, crossinfo;
 
-let index = 70;
+let index = 0;    //0から248まで　10交点
 
-function preload(){
-    img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png');
-}
+let ready = false;
+
+let error = [];
+
 
 function setup(){
     createCanvas(400, 400);
+    
+    frameRate(1);
 
+    rectMode(CENTER);
+
+}
+
+
+function draw(){
+
+    
+    if(ready){
+
+        ready = false;
+
+        main();
+
+        index++;
+        if(index<249)   img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png', function(){ready=true});
+
+    }
+
+}
+
+
+
+function main(){
     pix_niti = nitika(img);
     pix_hoso = newhososenka(pix_niti);  
     
@@ -29,7 +56,8 @@ function setup(){
     plist = pix2plist(pix_hoso);
     plist = sortplist(plist, ikisaki);
 
-    crossinfo = splitarc(plist);
+    //crossinfo = splitarc(plist);
+    crossinfo = split2(plist);
 
     let mindowker = knotinfo_dtnotation[index];
 
@@ -137,10 +165,6 @@ function setup(){
         
     }
 
-    console.log(mode);
-    console.log(listc);
-    console.log(listd);
-
     background(255);
 
     if(mode==1){
@@ -189,19 +213,16 @@ function setup(){
 
     }
 
-    rectMode(CENTER);
+    if(mode!=0) saveCanvas(knotinfo_name[index]+'_mindt','png');
+    else    error.push(index);
 
-    noLoop();
 }
 
 
-function draw(){
-
-    //描画
-    // background(255);
-
-    
-
+function keyPressed(){
+    if(keyCode==ENTER){
+        img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png', function(){ready=true});
+    }
 }
 
 //kobopcより更新
