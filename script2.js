@@ -203,3 +203,5 @@ function draw(){
     
 
 }
+
+//kobopcより更新
