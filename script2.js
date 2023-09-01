@@ -225,4 +225,3 @@ function keyPressed(){
     }
 }
 
-//kobopcより更新

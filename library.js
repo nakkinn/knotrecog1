@@ -1,3 +1,4 @@
+//行列式
 function det(a){
     let n=a.length;
 
@@ -902,7 +903,7 @@ function dok2rise(dok){
 }
 
 
-//ライズ付きドーカー対からアレキサンダー多項式の係数リスト
+//ドーカーコードからアレキサンダー多項式の係数リスト
 function dok2alex(dok){
 
     let doks = dok2rise(dok);
@@ -976,7 +977,20 @@ function dok2alex(dok){
     }
     if(result[0]<0) for(let i=0; i<result.length; i++)  result[i]*=-1;
     
-    return result;
+    let str = '';
+    str += result[0];
+
+    for(let i=1; i<result.length; i++){
+        if(result[i]>0) str += '+';
+        if(result[i]<0) str += '-';
+        if(result[i]!=0){
+            if(abs(result[i])!=1)    str += abs(result[i]);
+            str += 't';
+            if(i>1) str += '^' + i;
+        }
+    }
+
+    return str;
     
     function inside(a1, a2, b){
         if(a1 < a2){
@@ -987,6 +1001,231 @@ function dok2alex(dok){
             else    return false;
         }
     }
+}
+
+
+//ドーカーコードからジョーンズ多項式
+function dok2jones(code){
+
+    let coder = dok2rise(code);
+
+    let n2 = code.length*2;
+
+    let pdata = [];
+
+    for(let i=0; i<code.length; i++){
+        if(code[i]>0){
+            if(coder[i][1]==-1) pdata.push([slide(code[i],-1,n2), 2*i+1, code[i], slide(2*i+1,-1,n2)]);
+            else    pdata.push([slide(code[i],-1,n2), slide(2*i+1,-1,n2), code[i], 2*i+1]);
+        }else{
+            if(coder[i][1]==-1) pdata.push([slide(abs(code[i]),-1,n2), 2*i+1, abs(code[i]), slide(2*i+1,-1,n2)]);
+            else    pdata.push([slide(abs(code[i]),-1,n2), slide(2*i+1,-1,n2), abs(code[i]), 2*i+1]);
+        }
+    }
+
+    function slide(a1, sign, n){
+        let result = a1;
+        if(sign==1){
+            result++;
+            if(result>n)    result = 1;
+        }else{
+            result--;
+            if(result==0)   result = n;
+        }
+        return result;
+    }
+
+    let lista = [];
+
+    for(let i=0; i<pdata.length; i++){
+        lista[i] = ['A', 'B'];
+        lista[i][0] += '[' + pdata[i][0] + ',' + pdata[i][3] + '],' + '[' + pdata[i][1] + ',' + pdata[i][2] + '],';
+        lista[i][1] += '[' + pdata[i][0] + ',' + pdata[i][1] + '],' + '[' + pdata[i][2] + ',' + pdata[i][3] + '],';
+    }
+
+    let listb = [];
+
+    for(let i=0; i<2**pdata.length; i++){
+        let dec = i.toString(2).padStart(pdata.length,'0');
+
+        let tmp = '';
+        
+        for(let j=0; j<dec.length; j++){
+            if(dec.charAt(j)=='0')    tmp += lista[j][0];
+            else    tmp += lista[j][1];
+        }
+
+        listb.push(tmp);
+    }
+
+    let listc = new Array(listb.length);
+
+    for(let i=0; i<listb.length; i++){
+
+        let cou = 0;
+
+        for(let j=0; j<listb[i].length; j++){
+            if(listb[i].charAt(j)=='A') cou++;
+            if(listb[i].charAt(j)=='B') cou--;
+        }
+
+        //A, Bを削除
+        listb[i] = listb[i].split('A').join(''); 
+        listb[i] = listb[i].split('B').join('');
+
+        listb[i] = '[' + listb[i].slice(0,-1) + ']';    //最後の,を削除して[]で囲む
+
+        listb[i] = JSON.parse(listb[i]);
+
+        listc[i] = cou;
+    }
+
+    for(let k0=0; k0<listb.length; k0++){
+
+        listb[k0];
+
+        for(let k1=0; k1<99999; k1++){
+
+            for(let i=0; i<listb[k0].length; i++) listb[k0][i].sort(function(a,b){return a-b});
+            listb[k0].sort(function(a,b){return a[0]-b[0]});
+
+            for(let i=0; i<listb[k0].length-1; i++){
+                if(listb[k0][i][0]==listb[k0][i+1][0]){
+                    listb[k0][i] = [listb[k0][i][1], listb[k0][i+1][1]]
+                    listb[k0].splice(i+1,1);
+                }
+            }
+
+            let flag = true;
+            for(let i=0; i<listb[k0].length; i++){
+                if(listb[k0][i][0]!=listb[k0][i][1]){
+                    flag = false;
+                    break;
+                }
+            }
+
+            if(flag)    break;
+
+        }
+
+    }
+
+    for(let i=0; i<listc.length; i++){
+        listc[i] = [listc[i], listb[i].length];
+    }
+
+    listc.sort(function(a,b){return a[0]-b[0]});
+
+    for(let i=0; i<listc.length; i++)   listc[i].push(1);
+
+    for(let i=0; i<listc.length-1; i++){
+        if(listc[i][0]==listc[i+1][0] && listc[i][1] == listc[i+1][1]){
+            listc[i][2]++;
+            listc.splice(i+1,1);
+            i--;
+        }
+    }
+
+    let listd = [];
+    let hineri = 0;
+
+    for(let i=0; i<coder.length; i++){
+        hineri += coder[i][1];
+    }
+    hineri*=-3;
+
+    for(let k=0; k<listc.length; k++){
+        let n1 = listc[k][1]-1;
+        for(let i=0; i<=n1; i++){
+            listd.push([(-1)**(n1-1)*combination(n1,i)*listc[k][2], 2*n1-4*i+listc[k][0]+hineri]);
+        }
+    }
+
+    listd.sort(function(a,b){return b[1]-a[1]});
+
+    for(let i=0; i<listd.length-1; i++){
+        if(listd[i][1]==listd[i+1][1]){
+            listd[i][0] += listd[i+1][0];
+            listd.splice(i+1,1);
+            i--;
+        }
+    }
+
+    for(let i=0; i<listd.length; i++){
+        if(listd[i][0]==0){
+            listd.splice(i,1);
+            i--;
+        }
+    }
+
+    for(let i=0; i<listd.length; i++){
+        listd[i][1] /= -4;
+    }
+
+    let result='';
+
+    for(let i=0; i<listd.length; i++){
+
+        if(i!=0 && listd[i][0]>0)   result += '+';
+        if(listd[i][0]<0) result += '-';
+        if((abs(listd[i][0])!=1 && listd[i][0]!=0) || listd[i][1]==0) result += abs(listd[i][0]);
+
+        //if(abs(listd[i][0])!=1 && listd[i][1]!=0)   result+='*';
+
+        if(listd[i][1]!=0)  result+='t';
+        if(listd[i][1]!=0 && listd[i][1]!=1)    result+='^';
+
+        if(listd[i][1]>1)   result += listd[i][1];
+        if(listd[i][1]<0)   result += '(' + listd[i][1] + ')';
+    }
+
+    function combination(n0, r0){
+        let result = 1;
+        for(let i=n0; i>=n0-r0+1; i--){
+            result*=i;
+        }
+        for(let i=1; i<=r0; i++){
+            result/=i;
+        }
+        return result;
+    }
+
+    return result;
+
+}
+
+
+//ドーカーコードから12交点まででアレキサンダー多項式、ジョーンズ多項式が一致するものを探す
+function findknot(code){
+    let alex = dok2alex(code);
+    let jones = dok2jones(code);
+
+    let result = [];
+
+    for(let i=0; i<knotinfo_name.length; i++){
+        if(alex==knotinfo_alex[i] && (jones==knotinfo_jones[i]||polyneg(jones)==knotinfo_jones[i])){
+            result.push(knotinfo_name[i]);
+        }
+    }
+
+    return result;
+}
+
+
+//多項式の係数を全て-1倍する
+function polyneg(arg){
+
+    result = arg;
+
+    if(result.charAt(0)!='-')  result = '+' + result;  
+    result = result.split('+').join('%');
+    result = result.split('(-').join('&');
+    result = result.split('-').join('+');
+    result = result.split('%').join('-');
+    result = result.split('&').join('(-');
+    if(result.charAt(0)=='+')   result = result.slice(1);
+
+    return result;
 }
 
 
