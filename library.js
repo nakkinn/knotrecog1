@@ -1128,18 +1128,20 @@ function dok2jones(code){
 
     let listd = [];
     let hineri = 0;
+    let hineriex;
 
     for(let i=0; i<coder.length; i++){
         hineri += coder[i][1];
     }
-    hineri*=-3;
+    hineriex=-3*hineri;
 
     for(let k=0; k<listc.length; k++){
         let n1 = listc[k][1]-1;
         for(let i=0; i<=n1; i++){
-            listd.push([(-1)**(n1-1)*combination(n1,i)*listc[k][2], 2*n1-4*i+listc[k][0]+hineri]);
+            listd.push([(-1)**(n1+abs(hineri))*combination(n1,i)*listc[k][2], 2*n1-4*i+listc[k][0]+hineriex]);
         }
     }
+
 
     listd.sort(function(a,b){return b[1]-a[1]});
 

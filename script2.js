@@ -11,6 +11,7 @@ let ready = false;
 let error = [];
 
 
+
 function setup(){
     createCanvas(400, 400);
     
@@ -30,9 +31,9 @@ function draw(){
 
         main();
 
-        index++;
-        if(index<249)   img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png', function(){ready=true});
-
+        // index++;
+        // if(index<249)   img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png', function(){ready=true});
+        // else    console.log(error);
     }
 
 }
@@ -84,6 +85,7 @@ function main(){
 
         if(lista[i]){
             code = cross2dowker(crossinfo, i, false);
+            console.log(code);
 
             let flag = true;    //true:一致
             for(let j=0; j<code.length; j++){
@@ -102,6 +104,7 @@ function main(){
         if(listb[i]){
 
             code = cross2dowker(crossinfo, i, true);
+            console.log(code);
 
             let flag = true;    //true:一致
             for(let j=0; j<code.length; j++){
@@ -166,6 +169,7 @@ function main(){
     }
 
     background(255);
+    console.log(index);
 
     if(mode==1){
         image(img, 0, 0);
@@ -213,15 +217,15 @@ function main(){
 
     }
 
-    if(mode!=0) saveCanvas(knotinfo_name[index]+'_mindt','png');
-    else    error.push(index);
+    if(mode!=0) 1;/*saveCanvas(knotinfo_name[index]+'_mindt','png');*/
+    else    error.push(knotinfo_name[index]);
 
 }
 
 
 function keyPressed(){
     if(keyCode==ENTER){
-        img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png', function(){ready=true});
+        img = loadImage('diagrams_2977/' + /*knotinfo_name[index]*/'10_25' + '.png', function(){ready=true});
     }
 }
 

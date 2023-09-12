@@ -14,8 +14,8 @@ function setup(){
     pix_niti = nitika(img);
     pix_hoso = newhososenka(pix_niti);  
     
-    let branches = checkBranch(pix_hoso);   //枝分かれの数を調べる
-    if(branches[0]==1 && branches[1]==0){   //3つ又が1個だけのとき
+    let branches = checkBranch(pix_hoso);   
+    if(branches[0]==1 && branches[1]==0){  
         pix_hoso = deleteBranch1(pix_hoso);
     }
     if(branches[0]==2 && branches[1]==0){
@@ -28,6 +28,7 @@ function setup(){
     plist = sortplist(plist, ikisaki);
 
     crossinfo = split2(plist);
+    console.log(plist);
 
     let code = cross2dowker(crossinfo, 0, false)
     console.log(code);
