@@ -31,9 +31,9 @@ function draw(){
 
         main();
 
-        // index++;
-        // if(index<249)   img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png', function(){ready=true});
-        // else    console.log(error);
+        index++;
+        if(index<2977)   img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
+        else    console.log(error);
     }
 
 }
@@ -57,7 +57,6 @@ function main(){
     plist = pix2plist(pix_hoso);
     plist = sortplist(plist, ikisaki);
 
-    //crossinfo = splitarc(plist);
     crossinfo = split2(plist);
 
     let mindowker = knotinfo_dtnotation[index];
@@ -85,7 +84,6 @@ function main(){
 
         if(lista[i]){
             code = cross2dowker(crossinfo, i, false);
-            console.log(code);
 
             let flag = true;    //true:一致
             for(let j=0; j<code.length; j++){
@@ -104,7 +102,6 @@ function main(){
         if(listb[i]){
 
             code = cross2dowker(crossinfo, i, true);
-            console.log(code);
 
             let flag = true;    //true:一致
             for(let j=0; j<code.length; j++){
@@ -171,23 +168,23 @@ function main(){
     background(255);
     console.log(index);
 
-    if(mode==1){
-        image(img, 0, 0);
+    // if(mode==1){
+    //     image(img, 0, 0);
 
-        noStroke();
-        fill(255, 0, 0);
-        for(let i=0; i<listc.length; i++){
-            if(listc[i])    circle(plist[i][0][0], plist[i][0][1], 7);
-            if(listd[i])    circle(plist[i][plist[i].length-1][0], plist[i][plist[i].length-1][1], 7);
-        }
+    //     noStroke();
+    //     fill(255, 0, 0);
+    //     for(let i=0; i<listc.length; i++){
+    //         if(listc[i])    circle(plist[i][0][0], plist[i][0][1], 7);
+    //         if(listd[i])    circle(plist[i][plist[i].length-1][0], plist[i][plist[i].length-1][1], 7);
+    //     }
 
-        stroke(255);
-        fill(0);
-        textSize(16);
-        text(mindowker, 20, 390);
-    }
+    //     stroke(255);
+    //     fill(0);
+    //     textSize(16);
+    //     text(mindowker, 20, 390);
+    // }
 
-    if(mode==2){
+    if(mode==1||mode==2){
         strokeWeight(3);
         stroke(0, 0, 255);
         for(let i=0; i<plist.length; i++){
@@ -197,8 +194,13 @@ function main(){
         }
 
         for(let i=0; i<crossinfo.length; i++){
-            if(!crossinfo[i][2]) line(crossinfo[i][3].x, crossinfo[i][3].y, crossinfo[i][4].x, crossinfo[i][4].y);
-            else    line(crossinfo[i][5].x, crossinfo[i][5].y, crossinfo[i][6].x, crossinfo[i][6].y);
+            if(mode==2){
+                if(!crossinfo[i][2]) line(crossinfo[i][3].x, crossinfo[i][3].y, crossinfo[i][4].x, crossinfo[i][4].y);
+                else    line(crossinfo[i][5].x, crossinfo[i][5].y, crossinfo[i][6].x, crossinfo[i][6].y);
+            }else{
+                if(crossinfo[i][2]) line(crossinfo[i][3].x, crossinfo[i][3].y, crossinfo[i][4].x, crossinfo[i][4].y);
+                else    line(crossinfo[i][5].x, crossinfo[i][5].y, crossinfo[i][6].x, crossinfo[i][6].y);  
+            }
         }
 
         strokeWeight(1);
@@ -217,7 +219,7 @@ function main(){
 
     }
 
-    if(mode!=0) 1;/*saveCanvas(knotinfo_name[index]+'_mindt','png');*/
+    if(mode!=0) saveCanvas(knotinfo_name[index]+'_mindt','png');
     else    error.push(knotinfo_name[index]);
 
 }
@@ -225,7 +227,7 @@ function main(){
 
 function keyPressed(){
     if(keyCode==ENTER){
-        img = loadImage('diagrams_2977/' + /*knotinfo_name[index]*/'10_25' + '.png', function(){ready=true});
+        img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
     }
 }
 
