@@ -1652,6 +1652,7 @@ function split2(arg){
 
                     //前にたどる
                     for(let k=j; k>0; k--){
+                        
                         dis = dist(arg[i][k][0], arg[i][k][1], arg[i][k-1][0], arg[i][k-1][1]);
                         dsum+=dis;
 
@@ -1670,13 +1671,13 @@ function split2(arg){
                             break;
                         }
 
-                        if(flag){
-                            listfst = [
-                                [arg[i][0][0], arg[i][0][1] ],
-                                [arg[i][0][0]*0.9 + arg[i][1][0]*0.1, arg[i][0][1]*0.9 + arg[i][1][1]*0.1]
-                            ];
-                        }
+                    }
 
+                    if(flag){
+                        listfst = [
+                            [arg[i][0][0], arg[i][0][1] ],
+                            [arg[i][0][0]*0.9 + arg[i][1][0]*0.1, arg[i][0][1]*0.9 + arg[i][1][1]*0.1]
+                        ];
                     }
 
                     arg.splice(i,1);
