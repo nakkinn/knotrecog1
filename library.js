@@ -537,16 +537,6 @@ function deleteBranch2(arg){
         if(endCount(newpix[i])!=endc+2) sougo_error[i] = 999;
     }
 
-    background(255);
-    noStroke();
-    let index = 8;
-    for(let i=1; i<newpix[index].length-1; i++)    for(let j=1; j<newpix[index][0].length-1; j++){
-        if(newpix[index][i][j]==0)    fill(255);
-        if(arg[i][j]==1)    fill(100,100,255);
-        if(newpix[index][i][j]==1)    fill(0);
-        rect(i, j, 1);
-    }
-
     //うまくいっているものは９つのうち１つだけであることを確認
     let cou0 = 0, cou1 = 0, m0, m1;
     for(let i=0; i<sougo_error.length; i++){

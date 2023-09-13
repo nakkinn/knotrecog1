@@ -4,7 +4,7 @@ let img;
 
 let pix_hoso, pix_niti, ikisaki, plist, crossinfo;
 
-let index = 0;    //0から248まで　10交点
+let index = 0;    
 
 let ready = false;
 

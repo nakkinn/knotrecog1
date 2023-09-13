@@ -1,7 +1,7 @@
 //2977個全て認識できることを確認する
 
 let img;
-let index = 1959;
+let index = 0;
 let ready =  false;
 let error = [];
 
@@ -10,8 +10,6 @@ function setup(){
 
     createCanvas(400, 400);
 
-    img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
-    console.log(knotinfo_name[index]);
 }
 
 
@@ -22,10 +20,10 @@ function draw(){
 
         main();
 
-        // index++;
+        index++;
         
-        // if(index<2977)   img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
-        // else    console.log(error);
+        if(index<2977)   img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
+        else    console.log(error);
     }
 
 }
@@ -57,34 +55,31 @@ function main(){
     let calcalex = dok2alex(code);
     let infoalex = knotinfo_alex[index];
 
-    console.log(calcalex);
-    console.log(infoalex);
+    // console.log(calcalex);
+    // console.log(infoalex);
 
-    // console.log(index);
-    // if(calcalex!=infoalex){
-    //     console.log(knotinfo_name[index]);
-    //     error.push(knotinfo_name[index]);
+    console.log(index);
+    if(calcalex!=infoalex){
+        console.log(knotinfo_name[index]);
+        error.push(knotinfo_name[index]);
+    }
+
+    // noStroke();
+    // fill(0);
+    // for(let i=0; i<pix_hoso.length; i++)    for(let j=0; j<pix_hoso[0].length; j++){
+    //     if(pix_hoso[i][j]==1)   rect(i,j,1);
     // }
 
-    noStroke();
-    fill(0);
-    for(let i=0; i<pix_hoso.length; i++)    for(let j=0; j<pix_hoso[0].length; j++){
-        if(pix_hoso[i][j]==1)   rect(i,j,1);
-    }
-
-    stroke(255, 0, 0);
-    for(let i=0; i<ikisaki.length; i++) for(let j=0; j<ikisaki[i].length; j++){
-        line(ikisaki[i][0], ikisaki[i][1], ikisaki[i][2], ikisaki[i][3]);
-    }
+    // stroke(255, 0, 0);
+    // for(let i=0; i<ikisaki.length; i++) for(let j=0; j<ikisaki[i].length; j++){
+    //     line(ikisaki[i][0], ikisaki[i][1], ikisaki[i][2], ikisaki[i][3]);
+    // }
 
 }
 
 function keyPressed(){
     if(keyCode==ENTER){
-        img = loadImage('diagrams_2977/' + knotinfo_name[index] + '.png', function(){ready=true});
+        img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
     }
 }
 
-/* 
-12a_170(970), 12a_171(971)に失敗
-*/
