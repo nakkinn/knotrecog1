@@ -31,9 +31,9 @@ function draw(){
 
         main();
 
-        index++;
-        if(index<2977)   img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
-        else    console.log(error);
+        // index++;
+        // if(index<2977)   img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
+        // else    console.log(error);
     }
 
 }
@@ -44,8 +44,8 @@ function main(){
     pix_niti = nitika(img);
     pix_hoso = newhososenka(pix_niti);  
     
-    let branches = checkBranch(pix_hoso);   //枝分かれの数を調べる
-    if(branches[0]==1 && branches[1]==0){   //3つ又が1個だけのとき
+    let branches = checkBranch(pix_hoso);   
+    if(branches[0]==1 && branches[1]==0){   
         pix_hoso = deleteBranch1(pix_hoso);
     }
     if(branches[0]==2 && branches[1]==0){
@@ -85,6 +85,8 @@ function main(){
         if(lista[i]){
             code = cross2dowker(crossinfo, i, false);
 
+            console.log(code);
+
             let flag = true;    //true:一致
             for(let j=0; j<code.length; j++){
                 if(code[j]!=mindowker[j]){
@@ -102,6 +104,8 @@ function main(){
         if(listb[i]){
 
             code = cross2dowker(crossinfo, i, true);
+
+            console.log(code);
 
             let flag = true;    //true:一致
             for(let j=0; j<code.length; j++){
@@ -127,6 +131,8 @@ function main(){
 
             if(!lista[i]){
                 code = cross2dowker(crossinfo, i, false);
+
+                console.log(code);
     
                 let flag = true;    //true:一致
                 for(let j=0; j<code.length; j++){
@@ -145,6 +151,8 @@ function main(){
             if(!listb[i]){
     
                 code = cross2dowker(crossinfo, i, true);
+
+                console.log(code);
     
                 let flag = true;    //true:一致
                 for(let j=0; j<code.length; j++){
@@ -219,15 +227,15 @@ function main(){
 
     }
 
-    if(mode!=0) saveCanvas(knotinfo_name[index]+'_mindt','png');
-    else    error.push(knotinfo_name[index]);
+    //if(mode!=0) saveCanvas(knotinfo_name[index]+'_mindt','png');
+    //else    error.push(knotinfo_name[index]);
 
 }
 
 
 function keyPressed(){
     if(keyCode==ENTER){
-        img = loadImage('diagrams_2977edit/' + knotinfo_name[index] + '.png', function(){ready=true});
+        img = loadImage('diagrams_2977edit/9_18'/* + knotinfo_name[index]*/ + '.png', function(){ready=true});
     }
 }
 
