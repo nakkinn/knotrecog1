@@ -4,7 +4,7 @@ let img;
 let pix_hoso, pix_niti, ikisaki, plist, crossinfo;
 
 function preload(){
-    img = loadImage('diagrams_2977edit/8_20.png');
+    img = loadImage('diagrams_2977edit/11a_208.png');
 }
 
 function setup(){

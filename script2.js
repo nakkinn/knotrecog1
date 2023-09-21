@@ -235,7 +235,7 @@ function main(){
 
 function keyPressed(){
     if(keyCode==ENTER){
-        img = loadImage('diagrams_2977edit/9_18'/* + knotinfo_name[index]*/ + '.png', function(){ready=true});
+        img = loadImage('diagrams_2977edit/10_24'/* + knotinfo_name[index]*/ + '.png', function(){ready=true});
     }
 }
 
