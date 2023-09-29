@@ -20,13 +20,14 @@ function setup(){
     }
 
     for(let i=0; i<cn; i++){
-        let arcn, p1;
+        let arcn, p1, p2;
         arcn = crossinfo[i][1]-1;
         p1 = plist[arcn][plist[arcn].length-1];
-        circle(p1[0], p1[1], 5);
-        arcn = crossinfo[i][1]%cn;
-        p1 = plist[arcn][plist[arcn].length-1];
-        circle(p1[0], p1[1], 5);
+        arcn = crossinfo[i][1]%(cn*2);
+        p2 = plist[arcn][0];
+        
+        line(p1[0], p1[1], crossinfo[i][2], crossinfo[i][3]);
+        line(p2[0], p2[1], crossinfo[i][2], crossinfo[i][3]);
     }
 }
 
