@@ -1617,7 +1617,7 @@ function split2(arg){
     const slit = 8;
 
     let lista = [];
-    for(let i=0; i<n; i++)  lista[i] = [i, 0, true];
+    for(let i=0; i<n; i++)  lista[i] = [i, 0, 1];
 
     let va, vb, vc, vd, vcr;
 
